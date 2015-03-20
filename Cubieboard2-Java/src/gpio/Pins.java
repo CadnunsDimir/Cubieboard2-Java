@@ -119,8 +119,18 @@ public class Pins {
        {null,"XP-TP"},
        {null,"YN-TP"},
        {null,"XN-TP"},
-       {"67","ph"}
-       
+       {"67","ph7"},
+       {null,"GND"},
+       {"65","pb11"},
+       {"66","pb10"},
+       {"64","pb13", "SPDIF"},
+       {null,"GND"},
+       {null,"VCC-5V"},
+       {null,"3.3V"},
+       {"62","pi10"},
+       {"63","pb12"},
+       {"60","pb11"},
+       {"61","pb13"}
     };
     
 }
