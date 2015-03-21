@@ -128,9 +128,16 @@ public class Pins {
        {null,"VCC-5V"},
        {null,"3.3V"},
        {"62","pi10"},
-       {"63","pb12"},
-       {"60","pb11"},
-       {"61","pb13"}
+       {"63","pi12"},
+       {"60","pi11"},
+       {"61","pi13"}
+    };
+    
+    public final String port[] ={
+      null,
+      "pinsUSB",
+      "pinsSATA"
+        
     };
     
 }
