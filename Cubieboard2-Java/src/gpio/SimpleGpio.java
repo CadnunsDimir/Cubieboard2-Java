@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.logging.Logger;
+import ManipulaArq.ManipulaArq;
 
 /**
  *
@@ -22,18 +23,21 @@ public class SimpleGpio {
      * Contante que guarda String que será usada para gerar comando RunTime(no caso, Leitura de dados em um pino gpio).
      * Deve ser usada ao inserir parametros "direction", nos metodos dessa classe
      */
-    public static final String INPUT = "in";
+    public final String INPUT = "in";
     /**
      * 
      * Contante que guarda String que será usada para gerar comando RunTime(no caso, Escrita de dados em um pino gpio).
      * Deve ser usada ao inserir parametros "direction", nos metodos dessa classe
      */
-    public static final String OUTPUT = "out";
+    public final String OUTPUT = "out";
     
     /**
      * Importando a classe que contém o mapeamento de pinos
      */
     Pins pinos = new Pins();
+    ManipulaArq manFile = new ManipulaArq();
+    
+    
     /**
      * Usado para importar Pinos GPio na CB2, utilizando numero de referencia no Cubian OS
      * 
@@ -72,12 +76,17 @@ public class SimpleGpio {
         if(isFound){
             switch(port){
                 case 1: 
-                    importPinSh(pinos.pinsUSB[index][0]);
-                    setDirectionSh(pinos.pinsUSB[index][0], pinos.pinsUSB[index][1], direction);
+                    //importPinSh(pinos.pinsUSB[index][0]);
+                    importPinFile(pinos.pinsUSB[index][0]);
+                    //setDirectionSh(pinos.pinsUSB[index][0], pinos.pinsUSB[index][1], direction);
+                    setDirectionFile(pinos.pinsUSB[index][0], pinos.pinsUSB[index][1], direction);
+                    
                     return true;
                 case 2:                    
-                    importPinSh(pinos.pinsSATA[index][0]);
-                    setDirectionSh(pinos.pinsSATA[index][0], pinos.pinsSATA[index][1], direction);
+                    //importPinSh(pinos.pinsSATA[index][0]);
+                    importPinFile(pinos.pinsSATA[index][0]);
+                    //setDirectionSh(pinos.pinsSATA[index][0], pinos.pinsSATA[index][1], direction);
+                    setDirectionFile(pinos.pinsSATA[index][0], pinos.pinsSATA[index][1], direction);
                     return true;
                 default:
                     System.out.println("Erro ao acessar o pino "+index+" do PORT "+port+" : "+pinos.port[port]);
@@ -101,13 +110,28 @@ public class SimpleGpio {
     
     private void importPinSh(String pin) throws IOException{
         String comando = "echo "+pin+" > /sys/class/gpio/export";
-        executeCommand(comando);
-        
+        System.out.println(comando);
+        executeCommand(comando);        
+    }
+    
+    private void importPinFile(String pin) throws IOException{
+        String file = "/sys/class/gpio/export";
+        manFile.escreve(pin, file);
     }
     
     private void setDirectionSh(String pin, String pinName,String direction)throws IOException {
         String comando = "echo "+direction+" >  /sys/class/gpio/gpio"+pin+"_"+pinName+"/direction";
+        System.out.println(comando);
+        System.out.println("aguarde 1 seg...");
+        executeCommand("sleep 1");
         executeCommand(comando);             
+    }
+    
+    private void setDirectionFile(String pin, String pinName,String direction)throws IOException {
+        String file = "/sys/class/gpio/gpio"+pin+"_"+pinName+"/direction";
+        System.out.println("aguarde 1 seg...");
+        executeCommand("sleep 1");
+        manFile.escreve(direction, file);
     }
     
     private static final Logger log = Logger.getLogger(SimpleGpio.class.getName());  
